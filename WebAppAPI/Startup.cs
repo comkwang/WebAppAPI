@@ -35,7 +35,7 @@ namespace WebAppAPI
             options.UseSqlServer(Configuration.GetConnectionString("EnergyAccountDB")));
 
             services.AddSwaggerGen(c =>
-            {
+            { 
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAppAPI", Version = "v1" });
             });
         }
