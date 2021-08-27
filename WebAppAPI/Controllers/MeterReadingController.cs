@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAppAPI.EF;
 using WebAppAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAppAPI.Controllers
 {
@@ -64,14 +65,17 @@ namespace WebAppAPI.Controllers
         [HttpPost]
         public IActionResult Create(TestAccountModel model)
         {
+
             if (string.IsNullOrEmpty(model.FirstName))
                 return BadRequest("no first name.");
 
             TestAccount make = new TestAccount();
+
             make.FirstName = model.FirstName;
             make.LastName = model.LastName;
             make.AccountId = 1111;
-            _db.TestAccounts.Add(make);
+            _db.Entry(make).State = make.FirstName == "" ? EntityState.Added : EntityState.Modified;
+           // _db.TestAccounts.Add(make);
             _db.SaveChanges();
             return Ok(make);
         }
@@ -86,7 +90,7 @@ namespace WebAppAPI.Controllers
             TestAccount make = new TestAccount();
             make.FirstName = model.FirstName;
             make.LastName = model.LastName;
-            make.AccountId = 1111;
+            make.AccountId = 2344;
             _db.TestAccounts.Attach(make);
             _db.SaveChanges();
             return Ok(make);
@@ -98,16 +102,14 @@ namespace WebAppAPI.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
+            //var make = _db.TestAccounts.Where(s => s.AccountId == id).ToList();
+            //if (make is null)
+            //    return BadRequest("NO Data was found");
 
-       
-       
-            var make = _db.TestAccounts.Where(s => s.AccountId == id).ToList();
-            if (make is null)
-                return BadRequest("NO Data was found");
-
-            //TestAccount make = new TestAccount();
-            //_db.TestAccounts.Remove(make);
-            //_db.SaveChanges();
+            TestAccount make = new TestAccount();
+            make.AccountId = id;
+            _db.TestAccounts.RemoveRange(make);
+            _db.SaveChanges();
             return Ok(make);
         }
        
